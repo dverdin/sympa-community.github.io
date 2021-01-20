@@ -9,9 +9,12 @@ name here.
   - Serge Aumont
   - Olivier Calzi
   - Geoffroy Desvernay
+  - Luc Didry
   - Stefan Hornburg
   - Soji Ikeda
   - Mic Kaczmarczik
+  - Schplurtz le Déboulonné
+  - John Levine
   - Luis Martínez
   - Etienne Meleard
   - Olivier Salaün

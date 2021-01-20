@@ -1,6 +1,4 @@
----
-title: 'auth.conf(5)'
----
+redirect_to: /gpldoc/man/auth.conf.5.html
 
 # NAME
 
@@ -603,3 +601,5 @@ Descriptions of parameters were originally taken from the chapter
 "Authentication" in
 _Sympa, Mailing List Management Software - Reference manual_, written by
 Serge Aumont, Soji Ikeda, Olivier Salaün and David Verdin.
+=======
+>>>>>>> community/master

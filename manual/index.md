@@ -1,7 +1,7 @@
 Sympa Administration Manual
 ===========================
 
-Version 6.2.30
+Version 6.2.58
 
 Table of contents
 -----------------
@@ -61,17 +61,19 @@ Table of contents
 
 Appendices
 
-  - [References](man/sympa_toc.1.md)
+  - [References](/gpldoc/man/sympa_toc.1.html)
 
-      - [Reference manual](man/sympa_toc.1.md#reference-manual)
-      - [Daemons](man/sympa_toc.1.md#daemons)
-      - [Web interface](man/sympa_toc.1.md#web-interface)
-      - [Shell Interface](man/sympa_toc.1.md#shell-interface)
-      - [Auxiliary Programs](man/sympa_toc.1.md#auxiliary-programs)
-      - [Configuration files](man/sympa_toc.1.md#configuration-files)
-      - [Internals](man/sympa_toc.1.md#internals)
+      - [Reference manual](/gpldoc/man/sympa_toc.1.html#reference-manual)
+      - [Daemons](/gpldoc/man/sympa_toc.1.html#daemons)
+      - [Web interface](/gpldoc/man/sympa_toc.1.html#web-interface)
+      - [Shell Interface](/gpldoc/man/sympa_toc.1.html#shell-interface)
+      - [Auxiliary Programs](/gpldoc/man/sympa_toc.1.html#auxiliary-programs)
+      - [Configuration files](/gpldoc/man/sympa_toc.1.html#configuration-files)
+      - [Internals](/gpldoc/man/sympa_toc.1.html#internals)
 
   - [Directory layout](layout.md)
+
+  - [Documentation on older versions](/gpldoc/manual-old/)
 
 Manual convention
 -----------------

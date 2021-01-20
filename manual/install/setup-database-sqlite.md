@@ -21,19 +21,53 @@ General instruction
 
   1. Ensure that [``sympa.conf``](../layout.md#config) includes appropriate
      values for these parameters:
-     [``db_type``](../man/sympa.conf.5.md#db_type),
-     [``db_name``](../man/sympa.conf.5.md#db_name) and
-     [``db_timeout``](../man/sympa.conf.5.md#db_timeout) (optional).
+     [``db_type``](/gpldoc/man/sympa_config.5.html#db_type),
+     [``db_name``](/gpldoc/man/sympa_config.5.html#db_name) and
+     [``db_timeout``](/gpldoc/man/sympa_config.5.html#db_timeout) (optional).
 
        * ``db_type`` must be ``SQLite``.
 
        * ``db_name`` must be absolute path to database file you want to
          create.
 
+       Example:
+       ``` code
+       db_type SQLite
+       db_name /var/lib/sympa/sympa.sqlite
+       ```
+
   2. Create database file and table structure:
-     ```
+     ``` bash
      # touch <db_name>
      # chown sympa:sympa <db_name>
      # sympa.pl --health_check
+     ```
+
+Instruction for earlier releases of Sympa
+-----------------------------------------
+
+----
+Note:
+
+  * This section describes instruction with Sympa prior to 6.2.
+
+----
+
+  1. Set appropriate parameters in `sympa.conf` as described in above.
+
+  2. Create database file (note that `<db_name>` is the full path to database
+     file you want to create).
+
+     ``` bash
+     # touch <db_name>
+     # chown sympa:sympa <db_name>
+     ```
+  3. Create table structure (Note: replace
+     [``$SCRIPTDIR``](../layout.md#scriptdir)):
+
+     ``` bash
+     $ sqlite3 <db_name>
+     sqlite> .read $SCRIPTDIR/create_db.SQLite
+     sqlite> .quit
      ```
 

@@ -24,7 +24,7 @@ Instruction by MTAs
 -------------------
 
   - ~~[exim](configure-mail-server-exim.md)~~ (Work in progress)
-  - ~~[OpenSMTPD](configure-mail-server-opensmtpd.md)~~ (Work in progress)
+  - [OpenSMTPD](configure-mail-server-opensmtpd.md)
   - [Postfix](configure-mail-server-postfix.md)
   - [Sendmail](configure-mail-server-sendmail.md)
 
@@ -46,7 +46,7 @@ Tests
 
   3. Send a message with a subject "help" to ``sympa@mail.example.org``.
      And confirm that the message will be stored into
-     [incoming spool directory](../man/sympa.conf.5.md#queue) (by default
+     [incoming spool directory](/gpldoc/man/sympa_config.5.html#queue) (by default
      it is ``msg`` subdirectory in [``$SPOOLDIR``](../layout.md#spooldir)
      directory).
 
@@ -61,7 +61,7 @@ Tests
 
   4. Send any message to ``bounce+hogehoge@mail.example.org``.
      And confirm that the message will be stored into
-     [bounce spool directory](../man/sympa.conf.5.md#queuebounce) (by default
+     [bounce spool directory](/gpldoc/man/sympa_config.5.html#queuebounce) (by default
      it is ``bounce`` subdirectory in [``$SPOOLDIR``](../layout.md#spooldir)
      directory).
 
@@ -80,7 +80,8 @@ If something went unexpected, check mail system log and configuration of MTA.
 
   1. Open your favorite telnet tools (telnet or putty for example).
 
-  2. Open a session to your postfix server and use this command (replace example by your lists).
+  2. Open a session to your postfix server and use this command (replace
+     example by your addresses).
      ```
      HELO example.fr
      250 yourserver
@@ -94,9 +95,8 @@ If something went unexpected, check mail system log and configuration of MTA.
      250 2.1.5 Ok
      DATA
      354 End data with <CR><LF>.<CR><LF>
-     Message-ID:Something
-     Sender:<user@example.fr>
-     From:<user@example.fr>
+     Message-ID: <Something>
+     From: <user@example.fr>
      Subject: Hello
 
      Hello World

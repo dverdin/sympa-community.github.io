@@ -19,7 +19,7 @@ The SOAP server provides a limited set of high level functions: See "[Supported 
 
   - The client provides a user email and password and requests a service in a single SOAP access using the `authenticateAndRun` SOAP service.
 
-  - The client is trusted by Sympa as a proxy application and is authorized to set some variables that will be used by Sympa during the authorization scenario evaluation. Trusted applications have their own password, and the variables they can set are listed in a configuration file named [`trusted_applications.conf`](../man/trusted_applications.conf.5.md). See "[Trust remote applications](#trust-remote-applications)".
+  - The client is trusted by Sympa as a proxy application and is authorized to set some variables that will be used by Sympa during the authorization scenario evaluation. Trusted applications have their own password, and the variables they can set are listed in a configuration file named [`trusted_applications.conf`](/gpldoc/man/trusted_applications.conf.5.html). See "[Trust remote applications](#trust-remote-applications)".
 
 In any case, scenario authorization is used with the same rules as a mail interface or a normal web interface.
 
@@ -102,7 +102,7 @@ The following functions are currently available through the Sympa SOAP server :
 
 Note that when a list parameter is required for a function, you can either provide the list name or the list address. However the domain part of the address will be ignored.
 
-Check [the WSDL service description](../man/sympa.wsdl.5.md) for detailed API information.
+Check [the WSDL service description](/gpldoc/man/sympa.wsdl.5.html) for detailed API information.
 
 Setup
 -----
@@ -117,53 +117,28 @@ Setup
 
 ### HTTP server setup
 
-Here are excerpts of HTTP server configuration with a SOAP server (Note:
-replace [``$EXECCGIDIR``](../layout.md#execcgidir) below).
-For more details see appropriate section in
+See appropriate section in
 "[Configure HTTP server](../install/configure-http-server.md)".
-
-  * Apache HTTP Server
-
-    ``` code
-    <Location /sympasoap>
-        SetHandler fcgid-script
-    
-        ...
-    
-    </Location>
-    ScriptAlias /sympasoap $EXECCGIDIR/sympa_soap_server-wrapper.fcgi
-    ```
-
-    ----
-    Note:
-
-      * Starting Sympa 5.4, the
-        [`sympa_soap_server.fcgi`](../man/sympa_soap_server.8.md) is wrapped
-        in small C program, [`sympa_soap_server-wrapper.fcgi`](../man/sympa_soap_server-wrapper.8.md),
-        in order to avoid to use the --- insecure and no longer
-        maintained --- setuid perl mode.
-
-    ----
 
 ### Sympa configuration parameters
 
-  * [``soap_url``](../man/sympa.conf.5.md#soap_url)
+  * [``soap_url``](/gpldoc/man/sympa_config.5.html#soap_url)
 
     The URL of SOAP/HTTP service itself.
 
-  * [``wwsympa_url``](../man/sympa.conf.5.md#soap_url)
+  * [``wwsympa_url``](/gpldoc/man/sympa_config.5.html#soap_url)
 
     This is URL prefix of WWSympa service _without_ trailing slash (``/``).
     WSDL service description is published using a URL _wwsympa_url_`/wsdl`.
 
 ### Other configuration files
 
-  * [``sympa.wsdl``](../man/sympa.wsdl.5.md)
+  * [``sympa.wsdl``](/gpldoc/man/sympa.wsdl.5.html)
 
     WSDL service description. Default description is placed under
     [``$DEFAULTDIR``](../layout.md#defaultdir).
 
-  * [``trusted_applications.conf``](../man/trusted_applications.conf.5.md)
+  * [``trusted_applications.conf``](/gpldoc/man/trusted_applications.conf.5.html)
 
     Definitions of trusted SOAP applications.  See also below.
 
@@ -172,7 +147,7 @@ Trust remote applications
 
 The SOAP service `authenticateRemoteAppAndRun` is used in order to allow some remote applications such as a web portal to request the Sympa service as a proxy for the end user. In such cases, Sympa will not authenticate the end user itself, but instead it will trust a particular application to act as a proxy.
 
-This configuration file [`trusted_applications.conf`](../man/trusted_applications.conf.5.md) can be created in [``$SYSCONFDIR``](../layout.md#sysconfdir)`/`_domain_ directory or in [``$SYSCONFDIR``](../layout.md#sysconfdir) directory depending on the scope you want for it. This file is made of paragraphs separated by empty lines and stating with keyword `trusted_application`. A sample `trusted_applications.conf` file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs:
+This configuration file [`trusted_applications.conf`](/gpldoc/man/trusted_applications.conf.5.html) can be created in [``$SYSCONFDIR``](../layout.md#sysconfdir)`/`_domain_ directory or in [``$SYSCONFDIR``](../layout.md#sysconfdir) directory depending on the scope you want for it. This file is made of paragraphs separated by empty lines and stating with keyword `trusted_application`. A sample `trusted_applications.conf` file is provided with Sympa sources. Each paragraph defines a remote trusted application with keyword/value pairs:
 
   - `name`
 
@@ -186,7 +161,7 @@ This configuration file [`trusted_applications.conf`](../man/trusted_application
 
     A comma separated list of variables that can be set by the remote application and that will be used by the Sympa SOAP server when evaluating an authorization scenario. If you list `USER_EMAIL` in this parameter, then the remote application can act as a user. Any other variable such as `remote_host` can be listed.
 
-You can test your SOAP service using the [`sympa_soap_client.pl`](../man/sympa_soap_client.1.md) sample script as follows:
+You can test your SOAP service using the [`sympa_soap_client.pl`](/gpldoc/man/sympa_soap_client.1.html) sample script as follows:
 
 ``` bash
 $ sympa_soap_client.pl --soap_url=http://web.example.org/sympasoap \
@@ -202,7 +177,7 @@ $ sympa_soap_client.pl --soap_url=http://web.example.org/sympasoap \
  --service_parameters='listA,someone@some;domain,name'
 ```
 
-Below is a sample Perl code that does a SOAP procedure call (for a SUBSCRIBE sympa command) using the trusted\_application feature :
+Below is a sample Perl code that does a SOAP procedure call (for a SUBSCRIBE sympa command) using the `trusted_application` feature :
 
 ``` perl
 use SOAP::Lite;
@@ -304,7 +279,7 @@ Here is a simple Java code that invokes the generated stub to perform a `casLogi
 The test command line SOAP client
 ---------------------------------
 
-Sympa distribution includes a simple command line application that allows you to test SOAP request towards your Sympa SOAP server. This script is named [``sympa_soap_client.pl``](../man/sympa_soap_client.1.md) and is located in [``$SCRIPTDIR``](../layout.md#scriptdir) directory.
+Sympa distribution includes a simple command line application that allows you to test SOAP request towards your Sympa SOAP server. This script is named [``sympa_soap_client.pl``](/gpldoc/man/sympa_soap_client.1.html) and is located in [``$SCRIPTDIR``](../layout.md#scriptdir) directory.
 
 The [four methods](#introduction) available through the Sympa SOAP server can be tested using this tool. There is no explicit option to tell what access method is used. It is inferred based on what options are provided to the script.
 
@@ -350,7 +325,7 @@ It is done by calling the script and providing two kind of arguments :
 
 #### Authentication using an HTTP session cookie
 
-Actually, providing the HTTP cookie to a command line sums up in providing a session id, i.e. a simple number. You must use the value of a session cookie actually used at the time you launch the command. It is the “sympa\_session” cookie set when accessing to the Sympa web interface.
+Actually, providing the HTTP cookie to a command line sums up in providing a session id, i.e. a simple number. You must use the value of a session cookie actually used at the time you launch the command. It is the “`sympa_session`” cookie set when accessing to the Sympa web interface.
 
 ``` bash
 $ sympa_soap_client.pl --soap_url=<SOAP server URL> \
@@ -361,7 +336,7 @@ $ sympa_soap_client.pl --soap_url=<SOAP server URL> \
 
 The options used are:
 
-  - ``--soap\_url``
+  - ``--soap_url``
 
     The URL to your Sympa SOAP server.
 
@@ -449,7 +424,7 @@ The options used are:
 
   - ``--proxy_vars``
 
-    The proxy vars of the trusted application as defined in `trusted_applications.conf`. This is a comma-separated list of values. For example, if you have defined in `trusted_applications.conf` the following variables: `proxy_for_variables USER_EMAIL,remote_host`, then you will use it this way in the proxy\_vars option: `--proxy_vars=USER_EMAIL=user.email@domain.tld,remote_host=remote.host.domain.tld`.
+    The proxy vars of the trusted application as defined in `trusted_applications.conf`. This is a comma-separated list of values. For example, if you have defined in `trusted_applications.conf` the following variables: `proxy_for_variables USER_EMAIL,remote_host`, then you will use it this way in the `proxy_vars` option: `--proxy_vars=USER_EMAIL=user.email@domain.tld,remote_host=remote.host.domain.tld`.
 
 ### Sympa SOAP services and the command line tool
 

@@ -45,10 +45,10 @@ In this directory, you must provide the following files:
   - `param_constraint.conf` (mandatory);
   - `edit_list.conf`;
   - `automatic_lists_description.conf`;
-  - `message.footer.tt2`,`message.header.tt2`,`message.footer.mime.tt2`,`message.header.mime.tt2`,`info.tt2`;
-  - customizable files.
+  - `info.tt2`;
+  - other customizable files.
 
-#### config.tt2
+#### `config.tt2`
 
 This is a list creation template, this file is mandatory. It provides default values for parameters. This file is an almost complete list configuration, with a number of missing fields (such as owner email) to be replaced by data obtained at the time of family instantiation. It is easy to create new list templates by modifying existing ones.
 See "[Templates](basics-templates.md#list-template-files)".
@@ -109,7 +109,7 @@ include_sql_query
 ttl 360
 ```
 
-#### param\_constraint.conf
+#### `param_constraint.conf`
 
 This file is mandatory. It defines constraints on parameters. There are three kinds of constraints:
 
@@ -119,7 +119,7 @@ This file is mandatory. It defines constraints on parameters. There are three ki
 
 The parameters constraints will be checked at every list loading.
 
-**WARNING**: Some parameters cannot be constrained, they are: `msg_topic.keywords` (see [`msg_topic`](../man/list_config.5.md#msg_topic)), `owner_include.source_parameter` (see [`owner_include`](../man/list_config.5.md#owner_include)) and `editor_include.source_parameter` (see [`editor_include`](../man/list_config.5.md#editor_include)). About `digest` parameter (see [`digest`](../man/list_config.5.md#digest)), only days can be constrained.
+**WARNING**: Some parameters cannot be constrained, they are: `msg_topic.keywords` (see [`msg_topic`](/gpldoc/man/sympa_config.5.html#msg_topic)), `owner_include.source_parameter` (see [`owner_include`](/gpldoc/man/sympa_config.5.html#owner_include)) and `editor_include.source_parameter` (see [`editor_include`](/gpldoc/man/sympa_config.5.html#editor_include)). About `digest` parameter (see [`digest`](/gpldoc/man/sympa_config.5.html#digest)), only days can be constrained.
 
 Example:
 
@@ -131,24 +131,37 @@ shared_doc.d_read   public
 shared_doc.d_edit   editor
 ```
 
-#### edit\_list.conf
+#### `edit_list.conf`
 
 This is an optional file. It defines which parameters/files are editable by owners. See "[List editing](../admin/list-creation#list-editing)". If the family does not have this file, Sympa will look for the one defined on robot level, server site level or distribution level (this file already exists without family context).
 Note that by default, the `family_name` parameter is not writable, you should not change this editing right.
 
-#### automatic\_lists\_description.conf
+#### `automatic_lists_description.conf`
 
 This file is used if you want to let users create / access to automatic lists using the Sympa web interface. Please, see the [documentation related to this functionnality](friendly-automatic-lists.md).
 
 #### Common list files
 
-You can parse several files at list creation, later used by the list. Here are the files you can parse:
+You can parse several files at list creation, later used by the list. Here are
+the files you can parse (See also a note below):
 
-  - `message.footer.tt2`,
-  - `message.header.tt2`,
-  - `message.footer.mime.tt2`,
-  - `message.header.mime.tt2`,
+  - `message_footer.tt2`,
+  - `message_header.tt2`,
+  - `message_footer.mime.tt2`,
+  - `message_header.mime.tt2`,
   - `info.tt2`
+
+----
+Note:
+
+  * On Sympa 6.2.40 or earlier, files for footer and header should be named:
+    `message.footer.tt2`, `message.header.tt2`,
+    `message.footer.mime.tt2` and/or `message.header.mime.tt2`.
+
+    These files with older names are also usable on recent version of Sympa,
+    but newer names are prefered.
+
+----
 
 These files will be parsed using the list family data defined in the XML file. You can use the same data in these files as in the [config.tt2](#config-tt2) file.
 
@@ -179,28 +192,41 @@ Message footers and headers are likely to contain TT2 code themselves (for examp
 
 In that case, you can use the capacity, offered by TT2, to define [custom tag delimitors](http://template-toolkit.org/docs/manual/Config.html#section_START_TAG_END_TAG).
 
-Here's an example of such usage. Let's say I want to create lists with a family, and I want that each list automatically adds an unsubscription URL at the bottom of each message. For this, I'll need to use a message.footer file in each list.
+Here's an example of such usage. Let's say you want to create lists with a family, and you want that each list automatically adds an unsubscription URL at the bottom of each message. For this, you'll need to use a `message_footer` file in each list.
 
-I add a file named `message.footer.tt2` to the family directory. It contains the following code :
+A file named `message_footer.tt2` was added to the family directory. It contains the following code:
 
 ``` code
 [% TAGS <+ +> -%]
-The subject of the list is "<+ subject +>", click here to unsubscribe : [% wwsympa_url %]/auto_signoff/[% listname %]/[% user.escaped_email %]
+The subject of the list is "<+ subject +>", click here to unsubscribe : [% 'auto_signoff' | url_abs([listname],{email=>user.email}) %]
+<+- TAGS [% %] +>
 ```
 
 "Subject" corresponds to a tag in the XML file. Let's say it contains a short description of the list.
 
-Once the family has been instantiated, each list directory will contain a message.footer file containing the following code :
+Once the family has been instantiated, each list directory will contain a `message_footer` file containing the following code :
 
 ``` code
-The subject of the list is "create and share our passion of scrap cooking", click here to unsubscribe : [% wwsympa_url %]/auto_signoff/[% listname %]/[% user.escaped_email %]
+The subject of the list is "create and share our passion of scrap cooking", click here to unsubscribe : [% 'auto_signoff' | url_abs([listname],{email=>user.email}) %]
 ```
 
-Each time a message is sent to the list (provided you set the [`merge_feature`](../man/list_config.5.md#merge_feature) parameter to `on`), this file will be parsed and allow to display the following text at the bottom of each message:
+Each time a message is sent to the list (provided you set the [`merge_feature`](/gpldoc/man/sympa_config.5.html#merge_feature) parameter to `on`), this file will be parsed and allow to display the following text at the bottom of each message:
 
 ``` code
-The subject of the list is "create and share our passion of scrap cooking", click here to unsubscribe : http://lists.domain.tld/auto_signoff/mylist/bob.mcbob%40domain.tld
+The subject of the list is "create and share our passion of scrap cooking", click here to unsubscribe : http://lists.domain.tld/auto_signoff/mylist?email=bob.mcbob%40domain.tld
 ```
+
+----
+Note:
+
+  * The line above is an example for Sympa 6.2 later than Aug 2016. With earlier versions it shouold be:
+    ``` code
+    [% TAGS <+ +> -%]
+    The subject of the list is "<+ subject +>", click here to unsubscribe : [% wwsympa_url %]/auto_signoff/[% listname %]/[% user.escaped_email %]
+    <+- TAGS [% %] +>
+    ```
+
+----
 
 #### customizable files
 
@@ -224,8 +250,8 @@ sympa.pl --instantiate_family my_family --robot samplerobot --input_file /path/t
 
 This means lists that belong to family `my_family` will be created under the robot `my_robot` and these lists are described in the file `my_file.xml`. Sympa will split this file into several XML files describing lists. Each list XML file is put in each list directory.
 
-**–close\_unknown** option can be added to automatically close undefined lists during a new instantation
-**–quiet** option can be added to skip the report printed to STDOUT
+**``--close_unknown``** option can be added to automatically close undefined lists during a new instantation
+**``--quiet``** option can be added to skip the report printed to STDOUT
 
 Example:
 
@@ -374,12 +400,27 @@ Note: in order to preserve list customization for instantiation, every parameter
 
 ### Family unsubscription
 
-Using a global family message.footer.tt2 file, you can add at the end of each message sent from a family list a global unsubscription link. Here's what you could put in such message.footer.tt2:
+Using a global family `message_footer.tt2` file, you can add at the end of each message sent from a family list a global unsubscription link. Here's what you could put in such `message_footer.tt2`:
 
 ``` code
 [% TAGS <+ +> -%]
-To stop receiving messages from <+ family_config.display +>, click on this link: [% wwsympa_url %]/family_signoff_request/<+ family_config.name +>/[% user.escaped_email %]
+To stop receiving messages from <+ family_config.display +>, click on this link: [% 'family_signoff' | url_abs(['<+ family_config.name +>'],{email=user.email}) %]
+<+ TAGS [% %] -+>
 ```
 
 By clicking this link, the user will be redirected to the Sympa web interface where she will be informed that a confirmation message was just sent to her. If she clicks the confirmation link in this mesasge, she will be removed from all the past and future lists of this family.
+
+----
+Note:
+
+  * The line above is an example for Sympa 6.2.54 or later.
+    With Sympa 6.2.52 or earlier it should be:
+
+    ``` code
+    [% TAGS <+ +> -%]
+    To stop receiving messages from <+ family_config.display +>, click on this link: [% wwsympa_url %]/family_signoff_request/<+ family_config.name +>/[% user.escaped_email %]
+    <+ TAGS [% %] -+>
+    ```
+
+----
 

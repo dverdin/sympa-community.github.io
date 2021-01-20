@@ -20,8 +20,7 @@ See also "[Requirements](../requirements.md)".
     or [clang](https://clang.llvm.org/).
 
   * [Perl 5 interpreter](https://www.perl.org/get.html) is required.
-    Currently, Perl 5.8.1 and later are supported, however, recent version of
-    Perl 5 is recommended.
+    See "[Requirements](../requirements.md)" for available version of Perl.
 
   * make(1) utility. [GNU make](https://www.gnu.org/software/make/)
     (sometimes called "gmake") is recommended.
@@ -168,6 +167,36 @@ Note:
 ----
 
 ### Other useful options
+
+  - ``--disable-setuid``
+  
+    Disables all setuid features.  Each part of them may be disabled by
+    following suboptions:
+
+      - ``--disable-setuid_fcgi``
+
+        Won't install setuid wrappers for web interface
+        (``wwsympa-wrapper.fcgi`` and ``sympa_soap_server-wrapper.fcgi``).
+        If they have already been installed, will remove them.
+
+      - ``--disable-setuid_newaliases``
+
+        Won't install setuid wrappers for alias management
+        (``sympa_newaliases-wrapper``).
+        If they have already been installed, will remove them.
+
+      - ``--disable-setuid_queue``
+
+        Disables setuid bit of queue program
+        (``queue``, ``bouncequeue`` and ``familyqueue``).
+        If setuid bits have already been enabled, will disable them.
+
+    ----
+    Note:
+
+      * ``--disable-setuid*`` options were introduced on Sympa 6.2.60.
+
+    ----
 
   - ``--with-initdir=/etc/rc.d/init.d``
 

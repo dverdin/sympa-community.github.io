@@ -18,18 +18,18 @@ domain mail.example.org
 listmaster your@e-mail.addr.ess,other@email.addr.ess
 ```
 
-  * [``domain``](../man/sympa.conf.5.md#domain)
+  * [``domain``](/gpldoc/man/sympa_config.5.html#domain)
 
     The "primary" mail domain name of the mailing list service.
     If your Sympa provides multiple domains and at anytime domain is not
     specified, this domain will be used.
     If your Sympa provides service for single domain, it is primary domain.
 
-  * [``listmaster``](../man/sympa.conf.5.md#listmaster)
+  * [``listmaster``](/gpldoc/man/sympa_config.5.html#listmaster)
 
     Real address(es) of listmasters.  If your Sympa provides multiple domains,
     it may have listmasters by each domain.  However, listmaster(s) defined in
-    [``sympa.conf``](../man/sympa.conf.5.md#config) have privileges to manage
+    [``sympa.conf``](/gpldoc/man/sympa_config.5.html#config) have privileges to manage
     all domains, namely "super-listmaster".
 
     Multiple addresses have to be separated by comma
@@ -37,14 +37,24 @@ listmaster your@e-mail.addr.ess,other@email.addr.ess
     sent to those addresses must not be forwarded to any addresses managed by
     Sympa.
 
+----
+Note:
+
+  * On Sympa prior to 6.2.34,
+    [``wwsympa_url``](/gpldoc/man/sympa_config.5.html#wwsympa_url) parameter was also
+    required.  If it is the case, you may specify appropriate value at this
+    time.
+
+----
+
 Additionally, following parameter may be useful:
 
-  * [``lang``](../man/sympa.conf.5.md#lang)
+  * [``lang``](/gpldoc/man/sympa_config.5.html#lang)
 
     Default language used
     in user interface of Sympa (Note that this setting never affect languages
     of messages sent by users).  It should be one of possible values listed
-    in [``supported_lang``](../man/sympa.conf.5.md#supported_lang)
+    in [``supported_lang``](/gpldoc/man/sympa_config.5.html#supported_lang)
     parameter.  For example with Polish:
     ```
     lang pl
@@ -52,5 +62,5 @@ Additionally, following parameter may be useful:
     The default value is ``en-US`` (American English).
 
 To know about all available parameters in sympa.conf,
-see [sympa.conf(5)](../man/sympa.conf.5.md).
+see [sympa.conf(5)](/gpldoc/man/sympa_config.5.html).
 

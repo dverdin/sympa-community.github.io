@@ -29,6 +29,22 @@ Requirements
 
   * [FCGI](https://metacpan.org/release/FCGI), FastCGI interface for Perl.
 
+----
+Note:
+
+  * [`wwsympa.fcgi`](/gpldoc/man/wwsympa.8.html) is wrapped in small setuid program
+    written in C, [`wwsympa-wrapper.fcgi`](/gpldoc/man/wwsympa-wrapper.8.html).
+
+    Setuid wrapper was introduced on Sympa 5.4
+    in order to avoid to use the --- insecure and no longer
+    maintained --- setuid perl mode.
+
+    With HTTP Server 2.4 or later, another installation method
+    [using separate FastCGI service](configure-http-server-spawnfcgi.md)
+    does not need setuid wrapper.
+
+----
+
 General instruction
 -------------------
 
@@ -101,15 +117,20 @@ General instruction
 
        * Some binary distributions ship configuration ready to edit:
 
-           - On RPM, ``/etc/httpd/conf.d/sympa.conf`` file is prepared by
-             ``sympa-httpd`` package.
+           - On Debian (10 "buster" or earlier),
+             ``/etc/apache2/conf-available/sympa.conf`` file is prepared.
+             Also, separate ``/etc/apache2/conf-available/sympa-soap.conf``
+             file is prepared for SympaSOAP feature.
+
+           - On RPM (RHEL/CentOS 6), ``/etc/httpd/conf.d/sympa.conf`` file is
+             prepared by ``sympa-httpd`` package.
 
      ----
 
   2. Edit it as you prefer.
 
      Note that ``ServerName`` or ``ServerAlias`` directive should define
-     the host part of [``wwsympa_url``](../man/sympa.conf.5.md#wwsympa_url)
+     the host part of [``wwsympa_url``](/gpldoc/man/sympa_config.5.html#wwsympa_url)
      parameter.  Because Sympa refers to ``SERVER_NAME`` CGI environment
      variable to determine host name of web service.
 

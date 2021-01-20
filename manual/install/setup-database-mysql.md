@@ -24,12 +24,12 @@ General instruction
 
   1. Ensure that [``sympa.conf``](../layout.md#config) includes appropriate
      values for these parameters:
-     [``db_type``](../man/sympa.conf.5.md#db_type),
-     [``db_name``](../man/sympa.conf.5.md#db_name),
-     [``db_host``](../man/sympa.conf.5.md#db_host),
-     [``db_port``](../man/sympa.conf.5.md#db_host) (optional),
-     [``db_user``](../man/sympa.conf.5.md#db_user) and
-     [``db_passwd``](../man/sympa.conf.5.md#db_passwd) (optional).
+     [``db_type``](/gpldoc/man/sympa_config.5.html#db_type),
+     [``db_name``](/gpldoc/man/sympa_config.5.html#db_name),
+     [``db_host``](/gpldoc/man/sympa_config.5.html#db_host),
+     [``db_port``](/gpldoc/man/sympa_config.5.html#db_host) (optional),
+     [``db_user``](/gpldoc/man/sympa_config.5.html#db_user) and
+     [``db_passwd``](/gpldoc/man/sympa_config.5.html#db_passwd) (optional).
 
        * ``db_type`` must be ``MySQL`` or ``mysql`` (obsoleted).
 
@@ -37,6 +37,15 @@ General instruction
          database on local machine using Unix domain socket.  Otherwise, if
          another host name or IP address is set, TCP socket will be used (If
         ``db_port`` is not specified, ``3306`` will be used as port).
+
+       Example:
+       ``` code
+       db_type MySQL
+       db_name sympa
+       db_host localhost
+       db_user sympa
+       db_passwd (secret)
+       ```
 
   2. Create database and database user:
      ```
@@ -48,7 +57,7 @@ General instruction
      ```
 
   3. Create table structure:
-     ```
+     ``` bash
      # sympa.pl --health_check
      ```
 
@@ -63,4 +72,48 @@ Note:
     ``utf8mb4``.
 
 ----
+
+Instruction for earlier releases of Sympa
+-----------------------------------------
+
+----
+Note:
+
+  * This section describes instruction with Sympa prior to 6.2.
+
+----
+
+  1. Set appropriate parameters in `sympa.conf` as described in above.
+
+  2. Create database and table structure (Note: replace
+     [``$SCRIPTDIR``](../layout.md#scriptdir)):
+
+     ``` bash
+     $ mysql < $SCRIPTDIR/create_db.mysql
+     ```
+  3. Grant database privileges:
+
+     ``` bash
+     $ mysql
+     mysql> GRANT ALL PRIVILEGES ON sympa.* TO <db_user>@<client host>
+         -> IDENTIFIED BY '<db_passwd>';
+     mysql> QUIT
+     ```
+
+### Tuning
+
+With Sympa 6.0.x and 6.1.x, Sympa uses database as message spool.
+Thus, size of database server's communication buffer has to be as large as
+it can accept messages.
+
+To know maximum message size allowed to be stored in database, run:
+
+``` bash
+# sympa.pl --test_database_message_buffer
+```
+
+Then, if the result was smaller than what you expect, make
+[`max_allowed_packet`](https://dev.mysql.com/doc/refman/5.5/en/server-system-variables.html#sysvar_max_allowed_packet)
+parameter in `my.cnf` larger, and run the command above again.
+
 

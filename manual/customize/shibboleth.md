@@ -50,8 +50,8 @@ Sympa gathers all web authentication configuration in a single file: [``$SYSCONF
 
 ``` code
 generic_sso
-    service_name        Connexion
-    service_id          federation_renater
+    service_name        Global Login
+    service_id          our_service
     http_header_list    mail
     email_http_header   mail
     logout_url          https://web.example.org/Shibboleth.sso/Logout?return=https%3A%2F%2Fweb.example.org/sympa
@@ -62,9 +62,9 @@ generic_sso
 
 Note that:
 
-  - `service_name` ("`Connexion`" here) is the name of the button (of menu item) for logging in, in Sympa web interface;
+  - `service_name` ("`Global Login`" here) is the name of the button (of menu item) for logging in, in Sympa web interface;
 
-  - `service_id` ("`federation_renater`" here) is the identifier of this authentication server within Sympa. You'll notice later that login URLs in Sympa will include this token;
+  - `service_id` ("`our_service`" here) is the identifier of this authentication server within Sympa. You'll notice later that login URLs in Sympa will include this token;
 
   - `http_header_prefix` is of no use with Shibboleth SP 2.x because user attributes provided by Apache no more share a common prefix (as Shibboleth 1.3 used to do). Set this parameter to the same value as the `email_http_header` parameter. Note that Sympa 6 includes a new `http_header_list` more adapted to declare the set of user attributes that are worth getting from Shibboleth.
 
@@ -80,9 +80,9 @@ You'll need to restart your Apache server to make Sympa web server take these ch
 # service httpd restart
 ```
 
-You'll note the new "Connexion" button on your Sympa web interface:
+You'll note the new "Global Login" button on your Sympa web interface:
 
-![](../media/shiblogin.png)
+![](../media/shiblogin-6.2.36.png)
 
 Configuring Apache HTTP Server
 ------------------------------
@@ -90,7 +90,7 @@ Configuring Apache HTTP Server
 Shibboleth authentication needs to be triggered on a dedicated URL. Here is a sample HTTP Server configuration:
 
 ``` code
-<Location /sympa/sso_login/federation_renater>
+<Location /sympa/sso_login/our_service>
     AuthType shibboleth
     ShibRequestSetting requireSession true
     ShibRequestSetting applicationId app-sympa
@@ -101,7 +101,7 @@ Shibboleth authentication needs to be triggered on a dedicated URL. Here is a sa
 
 Note that:
 
-  - the protected URL includes the `service_id` (here "`federation_renater`"); you should replace with the `federation_id` you defined in your `auth.conf` file.
+  - the protected URL includes the `service_id` (here "`our_service`"); you should replace with the `federation_id` you defined in your `auth.conf` file.
 
   - [`ShibApplicationID`](https://wiki.shibboleth.net/confluence/display/SHIB/SPProtectionConfig#SPProtectionConfig-ProtectingContent) directive reffers to the application context you'll define in Shibboleth configuration file.
 
@@ -113,7 +113,7 @@ Now restart your web server to validate these changes, such as doing:
 # service httpd restart
 ```
 
-You can have a try accessing `http://web.example.org/sympa/sso_login/federation_renater`; it should trigger the Shibboleth user authentication.
+You can have a try accessing `http://web.example.org/sympa/sso_login/our_service`; it should trigger the Shibboleth user authentication.
 
 Configuring Shibboleth
 ----------------------
@@ -162,7 +162,8 @@ Before you register your mailing list in a production federation you should do s
   - [French test federation](https://services.renater.fr/federation/en/test-federation)
   - [Test federation in Japan](https://www.gakunin.jp/join/test/)
 
-or setup a bilateral trust relationship with a single Identity Provider ([documentation in French to setup a bilateral relationship](https://services.renater.fr/federation/docs/fiches/fedadeux).
+or setup a bilateral trust relationship with a single Identity Provider: See the documentation to setup a bilateral relationship
+([French](https://services.renater.fr/federation/docs/fiches/fedadeux), [Japanese](https://meatwiki.nii.ac.jp/confluence/x/SoW5)).
 
 You'll need to make sure all Identity Providers will provide the user email address; therefore they'll need to configure their *attribute release policy*.
 
@@ -179,5 +180,5 @@ You might not trust the email address user attribute provided by some Identity P
 This issue can be addressed by Sympa thanks to an extension developped by JP Robinson that allows Sympa to either validate the user's email address or even collect it (later associated to a Shibboleth user identifier).
 
 Please read the documentation for further informations:
-  * [generic_sso configuration documentation](../man/auth.conf.5.md#generic_sso-paragraph)
+  * [generic_sso configuration documentation](/gpldoc/man/auth.conf.5.html#generic_sso-paragraph)
 

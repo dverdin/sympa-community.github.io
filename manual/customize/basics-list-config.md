@@ -9,7 +9,7 @@ Configuration for each list
 ===========================
 
 A list has a directory of its own.  Most of configuration files and
-control files specific to the list is placed there.
+control files specific to the list are placed there.
 List also has several other directories to provide extensive features.
 
 Directories
@@ -33,7 +33,7 @@ The others will be created as their necessities.
 
       * Exceptionally, [``$EXPLDIR``](../layout.md#expldir)`/`_list name_`/`
         is also allowed for primary mail domain (mail domain defined by
-        `domain` parameter in [``sympa.conf``](../man/sympa.conf.5.md)).
+        `domain` parameter in [``sympa.conf``](/gpldoc/man/sympa_config.5.html)).
         However, full path described above is recommended for new
         installation.
 
@@ -78,16 +78,18 @@ Among them, `config` file is required.
 The others may be created during list creation, or configuration works by
 listmasters or owners.
 
-### `config`
+### Main configuration
 
-The file which keeps most of list configuration.
-See also
-"[Configuration files](basics-configuration.md#configuration-files)"
-in "Configuration hierarchy".
-See [`list_config(5)`](../man/list_config.5.md) for details of format and
-configuration parameters.
+  * `config`
 
-### `info` file and `homepage` file
+    The file keeps most of list configuration.
+    See also
+    "[Configuration files](basics-configuration.md#configuration-files)"
+    in "Configuration hierarchy".
+    See [`list_config(5)`](/gpldoc/man/sympa_config.5.html) for details of format and
+    configuration parameters.
+
+### `info` and `homepage` files
 
   * `info`
 
@@ -107,37 +109,62 @@ configuration parameters.
 
 ### Message header and footer
 
-  * `message.footer`
-  * `message.footer.mime`
+  * `message_footer`
+  * `message_footer.mime`
+
+    ----
+    Note:
+
+      * On Sympa 6.2.40 or earlier, these were named `message.footer`
+        and `message.footer.mime`.
+
+    ----
 
     If either of these files exists, it will be appended at end of
-    distributed messages (see also
-    [`footer_type`](../man/list_config.5.md#footer_type) parameter).
+    distributed messages.
 
-  * `message.header`
-  * `message.header.mime`
+    `message_footer.mime` is used only when footer type is "mime" (see also
+    [`footer_type`](/gpldoc/man/sympa_config.5.html#footer_type) parameter).
+
+  * `message_header`
+  * `message_header.mime`
+
+    ----
+    Note:
+
+      * On Sympa 6.2.40 or earlier, these were named `message.header`
+        and `message.header.mime`.
+
+    ----
 
     Similar to files above, but they will be appended at beginning of
     distributed messages.
 
 ### Templates
 
-Mail templates (_list directory_`/mail_tt2/`_file name_`.tt2`)
-and web templates (_list directory_`/web_tt2/`_file name_`.tt2`)
-for specific list may customize templates.
-See also "[Templates](basics-templates.md)".
+  * `mail_tt2/`_file name_`.tt2`
+  * `web_tt2/`_file name_`.tt2`
+
+    Mail templates (`mail_tt2/`_file name_`.tt2`)
+    and web templates (`mail_tt2/`_file name_`.tt2`)
+    for specific list may customize templates.
+    See also "[Templates](basics-templates.md)".
 
 ### Tasks
 
-List task files (_list directory_`/`_file name_`.task`)
-for specific list may customize data source definitions.
-See also "[Data sources](basics-tasks.md)".
+  * `tasks/`_file name_`.task`
+
+    Task files for specific list.
+    Note that, with earlier versions, `list_task_models` directory was used instead of
+    `tasks`.
+    See "[Tasks](basics-tasks.md)" for details.
 
 ### Data inclusion files
 
-Data inclusion files (_list directory_`/data_sources/`_file name_`.incl`)
-for specific list may customize data source definitions.
-See also "[Data sources](../customize/data-sources.md)".
+  * `data_sources/`_file name_`.incl`
+
+    Data inclusion files for specific list may customize data source definitions.
+    See also "[Data sources](../customize/data-sources.md)".
 
 Control files
 -------------
@@ -151,63 +178,82 @@ Note:
 
 ----
 
-(Work in progress)
+  * `owner.dump`
+  * `editor.dump`
+  * `member.dump`
 
-### `stats`
+    These files include snapshots of list users:
+    `owner.dump` for list owners, `editor.dump` for moderators and
+    `member.dump` for subscribers.
 
-`stats` file under list directory contains accumulated amount of message
-delivery.  It contains following four integer numbers separated by space
-characters:
+#### Creation, opening, modifying, closing or restoring lists
 
-  1. Number of messages the list has distributed.
-     This number is assigned as value of `list.sequence` template variable
-     used with [`custom_subject`](../man/list_config.5.md#custom_subject)
-     parameter.
-  2. Total number of messages the list has distributed.
-  3. Sum of message sizes the list has distributed.
-  4. Total sum of message sizes the list has distributed.
+When a list is created using list creation template
+(see "[List creation](../admin/list-creation.md#list-creation)"), dump files
+are created and imported
+to backend database immediately.
 
-----
-Note:
+When a family list is modified (see
+"[Modifying a family list](basics-families.md#modifying-a-family-list)"),
+dump files including new owners and moderators are created, and owners and
+moderators in backend database are replaced with content of dump files.
 
-  * In general, this file should not be modified manually.
+When a list is closed (see
+"[Removing a list](../admin/list-creation.md#removing-a-list)"),
+list users are exported into dump files, and users are
+removed from backaend database.  When the list is restored by listmaster,
+users in dump files are imported again.
 
-  * This file on earlier versions of Sympa might contain additional
-    information.  Format of this file may be changed in the future.
+#### Handling dump files with command line interface
 
-----
+Additionally, administrator can export users to dump files using command line
+`sympa.pl --dump_users` anytime, or import dump files using
+`sympa.pl --restore_users` (see [`sympa.pl(1)`](/gpldoc/man/sympa.1.html)) anytime.
+`sympa.pl --dump_users` does not remove users in database backend.
 
-### `msg_count`
+### Other files
 
-----
-Note:
+In general, these files should not be modified manually.
 
-  * This file should not be modified manually.
+  * `stats`
 
-----
+    `stats` file under list directory contains accumulated amount of message
+    delivery.  It contains following four integer numbers separated by space
+    characters:
 
-`msg_count` file under list directory contains number of messages distributed
-by days.  Its content will be imported in database, and shown in
-"List statistics" page of web interface.
+      1. Number of messages the list has distributed.
+         This number is assigned as value of `list.sequence` template variable
+         used with [`custom_subject`](/gpldoc/man/sympa_config.5.html#custom_subject)
+         parameter.
+      2. Total number of messages the list has distributed.
+      3. Sum of message sizes the list has distributed.
+      4. Total sum of message sizes the list has distributed.
 
-### `config_changes`
+    ----
+    Note:
 
-----
-Note:
+      * This file on earlier versions of Sympa might contain additional
+        information.  Format of this file may be changed in the future.
 
-  * This file should not be modified manually.
+    ----
 
-----
+  * `msg_count`
 
-`config_changes` file under list directory tracks modification of list
-configuration by users, if the list belongs to family.
+    `msg_count` file under list directory contains number of messages distributed
+    by days.  Its content will be imported in database, and shown in
+    "List statistics" page of web interface.
 
-(Work in progress)
+  * `config_changes`
+
+    `config_changes` file under list directory tracks modification of list
+    configuration by users, if the list belongs to family.
+
+    (Work in progress)
 
 Deprecated files
 ----------------
 
-  * _list directory_`/subscribers`
+  * `subscribers`
 
     On Sympa prior to 5.4, this file retained subscriber information.
     Recently, information of subscribers are solely stored in database,

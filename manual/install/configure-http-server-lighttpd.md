@@ -20,6 +20,18 @@ Requirements
 
   * [FCGI](https://metacpan.org/release/FCGI), FastCGI interface for Perl.
 
+----
+Note:
+
+  * [`wwsympa.fcgi`](/gpldoc/man/wwsympa.8.html) is wrapped in small setuid program
+    written in C, [`wwsympa-wrapper.fcgi`](/gpldoc/man/wwsympa-wrapper.8.html).
+
+    Setuid wrapper was introduced on Sympa 5.4
+    in order to avoid to use the --- insecure and no longer
+    maintained --- setuid perl mode.
+
+----
+
 General instruction
 -------------------
 
@@ -28,10 +40,11 @@ General instruction
      [``$STATICDIR``](../layout.md#staticdir)):
      ```
      server.modules += ("mod_fastcgi")
+     server.modules += ("mod_alias")
 
      alias.url += ( "/static-sympa/" => "$STATICDIR/" )
 
-     $HTTP["url"] =~ "\^/sympa" {
+     $HTTP["url"] =~ "^/sympa" {
      fastcgi.server = ( "/sympa" =>
          ((    "check-local"    =>    "disable",
              "bin-path"    =>    "$EXECCGIDIR/wwsympa-wrapper.fcgi",
@@ -48,17 +61,24 @@ General instruction
 
        * Some binary distributions ship configuration ready to edit:
 
-           - On RPM, ``/etc/lighttpd/sympa.conf`` file is prepared by
+           - On RPM, ``/etc/lighttpd/conf.d/sympa.conf`` file is prepared by
              ``sympa-lighttpd`` package.  To add it
              to configuration, you might want to add a line at the bottom in
              ``lighttpd.conf``:
              ```
-             include /etc/lighttpd/sympa.conf
+             include conf.d/sympa.conf
              ```
 
      ----
 
   2. Edit it as you prefer.
 
-  3. Restart lighttpd.
+  3. Create a directory `/var/run/lighttpd` that is writable by lighttpd processes:
+  
+     ``` bash
+     # mkdir /var/run/lighttpd
+     # chown lighttpd /var/run/lighttpd
+     ```
+
+  4. Restart lighttpd.
 
